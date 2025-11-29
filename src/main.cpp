@@ -9,6 +9,7 @@
 #include <limits>
 #include <string>
 #include <iomanip>
+#include <conio.h>  // For _getch() on Windows
 
 using namespace std;
 
@@ -36,6 +37,60 @@ void printHeader(const string& title) {
     cout << "\n" << string(60, '=') << endl;
     cout << title << endl;
     cout << string(60, '=') << endl;
+}
+
+// Function to read password with masking (shows * instead of characters)
+string getHiddenPassword() {
+    string password = "";
+    char ch;
+    
+    while (true) {
+        ch = _getch();  // Get character without echoing
+        
+        if (ch == 13) {  // Enter key
+            cout << endl;
+            break;
+        }
+        else if (ch == 8) {  // Backspace
+            if (!password.empty()) {
+                password.pop_back();
+                cout << "\b \b";  // Move back, print space, move back again
+            }
+        }
+        else if (ch >= 32 && ch <= 126) {  // Printable characters
+            password += ch;
+            cout << '*';  // Display asterisk
+        }
+    }
+    
+    return password;
+}
+
+// Function to get password with confirmation (for new users)
+string getPasswordWithConfirmation() {
+    string password1, password2;
+    
+    do {
+        cout << "Enter password: ";
+        password1 = getHiddenPassword();
+        
+        if (password1.length() < 4) {
+            cout << "[WARNING] Password should be at least 4 characters!" << endl;
+            cout << "Try again.\n" << endl;
+            continue;
+        }
+        
+        cout << "Confirm password: ";
+        password2 = getHiddenPassword();
+        
+        if (password1 != password2) {
+            cout << "[ERROR] Passwords do not match! Try again.\n" << endl;
+        }
+        else {
+            cout << "[SUCCESS] Password confirmed!" << endl;
+            return password1;
+        }
+    } while (true);
 }
 
 // ============================================
@@ -103,8 +158,8 @@ void adminStaffManagement() {
             getline(cin, email);
             cout << "Enter address: ";
             getline(cin, address);
-            cout << "Enter password: ";
-            getline(cin, password);
+            cout << endl;
+            password = getPasswordWithConfirmation();
             staffModule->addStaff(name, email, address, password);
             pressEnterToContinue();
             break;
@@ -693,7 +748,7 @@ int main() {
             cout << "Email: ";
             getline(cin, email);
             cout << "Password: ";
-            getline(cin, password);
+            password = getHiddenPassword();
 
             if (adminModule->login(email, password)) {
                 adminDashboard();
@@ -708,7 +763,7 @@ int main() {
             cout << "Email: ";
             getline(cin, email);
             cout << "Password: ";
-            getline(cin, password);
+            password = getHiddenPassword();
 
             if (staffModule->login(email, password)) {
                 staffDashboard();

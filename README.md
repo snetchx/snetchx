@@ -86,6 +86,12 @@ A comprehensive Restaurant Management System built with **C++** and **MySQL** da
 | jane@restaurant.com | jane123 |
 | bob@restaurant.com | bob123 |
 
+### 🔒 Security Features
+- ✅ Password input is **hidden** (displays `*` instead of characters)
+- ✅ Password confirmation when creating new staff (asks twice)
+- ✅ Minimum password length validation (4+ characters)
+- ✅ Backspace support during password entry
+
 ## 📁 Project Structure
 
 ```
