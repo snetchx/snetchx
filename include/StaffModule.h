@@ -14,7 +14,9 @@ private:
     bool isLoggedIn;
 
     string generateStaffID() {
-        auto res = db.executeQuery("SELECT MAX(CAST(SUBSTRING(StaffID, 4) AS UNSIGNED)) as MaxID FROM Staff");
+        // Get the highest ID ever used (even if deleted)
+        auto res = db.executeQuery(
+            "SELECT COALESCE(MAX(CAST(SUBSTRING(StaffID, 4) AS UNSIGNED)), 0) as MaxID FROM Staff");
         if (res && res->next()) {
             int maxID = res->getInt("MaxID");
             char buffer[10];

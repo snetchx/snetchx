@@ -12,7 +12,9 @@ private:
     DatabaseConnection& db;
 
     string generateOrderID() {
-        auto res = db.executeQuery("SELECT MAX(CAST(SUBSTRING(OrderID, 4) AS UNSIGNED)) as MaxID FROM Orders");
+        // Get the highest ID ever used (even if deleted)
+        auto res = db.executeQuery(
+            "SELECT COALESCE(MAX(CAST(SUBSTRING(OrderID, 4) AS UNSIGNED)), 0) as MaxID FROM Orders");
         if (res && res->next()) {
             int maxID = res->getInt("MaxID");
             char buffer[15];
@@ -23,7 +25,9 @@ private:
     }
 
     string generateOrderItemID() {
-        auto res = db.executeQuery("SELECT MAX(CAST(SUBSTRING(Order_itemID, 4) AS UNSIGNED)) as MaxID FROM Order_Item");
+        // Get the highest ID ever used (even if deleted)
+        auto res = db.executeQuery(
+            "SELECT COALESCE(MAX(CAST(SUBSTRING(Order_itemID, 4) AS UNSIGNED)), 0) as MaxID FROM Order_Item");
         if (res && res->next()) {
             int maxID = res->getInt("MaxID");
             char buffer[15];

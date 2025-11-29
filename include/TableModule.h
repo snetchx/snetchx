@@ -11,7 +11,9 @@ private:
     DatabaseConnection& db;
 
     string generateTableID() {
-        auto res = db.executeQuery("SELECT MAX(CAST(SUBSTRING(TableID, 4) AS UNSIGNED)) as MaxID FROM Tables");
+        // Get the highest ID ever used (even if deleted)
+        auto res = db.executeQuery(
+            "SELECT COALESCE(MAX(CAST(SUBSTRING(TableID, 4) AS UNSIGNED)), 0) as MaxID FROM Tables");
         if (res && res->next()) {
             int maxID = res->getInt("MaxID");
             char buffer[10];
