@@ -1,0 +1,69 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\frsnq\\OneDrive\\Desktop\\UTEM\\Sem3\\Workshop 1\\restaurant testing\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{7542D8B8-1D26-4A60-8E70-13D4F5ECC4EE}|restaurant testing.vcxproj|C:\\Users\\frsnq\\OneDrive\\Desktop\\UTEM\\Sem3\\Workshop 1\\restaurant testing\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7542D8B8-1D26-4A60-8E70-13D4F5ECC4EE}|restaurant testing.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7542D8B8-1D26-4A60-8E70-13D4F5ECC4EE}|restaurant testing.vcxproj|C:\\Users\\frsnq\\OneDrive\\Desktop\\UTEM\\Sem3\\Workshop 1\\restaurant testing\\DatabaseConnection.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7542D8B8-1D26-4A60-8E70-13D4F5ECC4EE}|restaurant testing.vcxproj|solutionrelative:DatabaseConnection.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7542D8B8-1D26-4A60-8E70-13D4F5ECC4EE}|restaurant testing.vcxproj|C:\\Users\\frsnq\\OneDrive\\Desktop\\UTEM\\Sem3\\Workshop 1\\restaurant testing\\DatabaseConnection.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7542D8B8-1D26-4A60-8E70-13D4F5ECC4EE}|restaurant testing.vcxproj|solutionrelative:DatabaseConnection.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DatabaseConnection.h",
+              "DocumentMoniker": "C:\\Users\\frsnq\\OneDrive\\Desktop\\UTEM\\Sem3\\Workshop 1\\restaurant testing\\DatabaseConnection.h",
+              "RelativeDocumentMoniker": "DatabaseConnection.h",
+              "ToolTip": "C:\\Users\\frsnq\\OneDrive\\Desktop\\UTEM\\Sem3\\Workshop 1\\restaurant testing\\DatabaseConnection.h",
+              "RelativeToolTip": "DatabaseConnection.h",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAwDIAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-11-27T13:01:34.794Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\Users\\frsnq\\OneDrive\\Desktop\\UTEM\\Sem3\\Workshop 1\\restaurant testing\\main.cpp",
+              "RelativeDocumentMoniker": "main.cpp",
+              "ToolTip": "C:\\Users\\frsnq\\OneDrive\\Desktop\\UTEM\\Sem3\\Workshop 1\\restaurant testing\\main.cpp",
+              "RelativeToolTip": "main.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAG4BAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-11-27T13:00:56.361Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DatabaseConnection.cpp",
+              "DocumentMoniker": "C:\\Users\\frsnq\\OneDrive\\Desktop\\UTEM\\Sem3\\Workshop 1\\restaurant testing\\DatabaseConnection.cpp",
+              "RelativeDocumentMoniker": "DatabaseConnection.cpp",
+              "ToolTip": "C:\\Users\\frsnq\\OneDrive\\Desktop\\UTEM\\Sem3\\Workshop 1\\restaurant testing\\DatabaseConnection.cpp",
+              "RelativeToolTip": "DatabaseConnection.cpp",
+              "ViewState": "AgIAALkAAAAAAAAAAAAAwOUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-11-27T13:00:13.425Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

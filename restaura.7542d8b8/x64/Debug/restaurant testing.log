@@ -1,0 +1,9 @@
+﻿  DatabaseConnection.cpp
+C:\Users\frsnq\OneDrive\Desktop\UTEM\Sem3\Workshop 1\restaurant testing\DatabaseConnection.h(4,10): error C1083: Cannot open include file: 'mysql_driver.h': No such file or directory
+  (compiling source file 'DatabaseConnection.cpp')
+  
+  main.cpp
+C:\Users\frsnq\OneDrive\Desktop\UTEM\Sem3\Workshop 1\restaurant testing\DatabaseConnection.h(4,10): error C1083: Cannot open include file: 'mysql_driver.h': No such file or directory
+  (compiling source file 'main.cpp')
+  
+  Generating Code...
