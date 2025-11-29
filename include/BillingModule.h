@@ -11,11 +11,27 @@ private:
     DatabaseConnection& db;
 
     string generateBillID() {
-        // Get the highest ID ever used (even if deleted)
+        // Find the smallest missing ID (reuses deleted IDs)
         auto res = db.executeQuery(
-            "SELECT COALESCE(MAX(CAST(SUBSTRING(BillID, 4) AS UNSIGNED)), 0) as MaxID FROM Bill");
+            "SELECT t1.num + 1 AS gap "
+            "FROM (SELECT CAST(SUBSTRING(BillID, 4) AS UNSIGNED) AS num FROM Bill) t1 "
+            "LEFT JOIN (SELECT CAST(SUBSTRING(BillID, 4) AS UNSIGNED) AS num FROM Bill) t2 "
+            "ON t1.num + 1 = t2.num "
+            "WHERE t2.num IS NULL "
+            "ORDER BY gap LIMIT 1");
+        
         if (res && res->next()) {
-            int maxID = res->getInt("MaxID");
+            int gapID = res->getInt("gap");
+            char buffer[15];
+            sprintf_s(buffer, "BIL%06d", gapID);
+            return string(buffer);
+        }
+        
+        // If no gaps found, get max + 1 (or start with BIL000001 if table is empty)
+        auto maxRes = db.executeQuery(
+            "SELECT COALESCE(MAX(CAST(SUBSTRING(BillID, 4) AS UNSIGNED)), 0) as MaxID FROM Bill");
+        if (maxRes && maxRes->next()) {
+            int maxID = maxRes->getInt("MaxID");
             char buffer[15];
             sprintf_s(buffer, "BIL%06d", maxID + 1);
             return string(buffer);

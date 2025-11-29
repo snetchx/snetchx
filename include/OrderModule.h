@@ -12,11 +12,27 @@ private:
     DatabaseConnection& db;
 
     string generateOrderID() {
-        // Get the highest ID ever used (even if deleted)
+        // Find the smallest missing ID (reuses deleted IDs)
         auto res = db.executeQuery(
-            "SELECT COALESCE(MAX(CAST(SUBSTRING(OrderID, 4) AS UNSIGNED)), 0) as MaxID FROM Orders");
+            "SELECT t1.num + 1 AS gap "
+            "FROM (SELECT CAST(SUBSTRING(OrderID, 4) AS UNSIGNED) AS num FROM Orders) t1 "
+            "LEFT JOIN (SELECT CAST(SUBSTRING(OrderID, 4) AS UNSIGNED) AS num FROM Orders) t2 "
+            "ON t1.num + 1 = t2.num "
+            "WHERE t2.num IS NULL "
+            "ORDER BY gap LIMIT 1");
+        
         if (res && res->next()) {
-            int maxID = res->getInt("MaxID");
+            int gapID = res->getInt("gap");
+            char buffer[15];
+            sprintf_s(buffer, "ORD%06d", gapID);
+            return string(buffer);
+        }
+        
+        // If no gaps found, get max + 1 (or start with ORD000001 if table is empty)
+        auto maxRes = db.executeQuery(
+            "SELECT COALESCE(MAX(CAST(SUBSTRING(OrderID, 4) AS UNSIGNED)), 0) as MaxID FROM Orders");
+        if (maxRes && maxRes->next()) {
+            int maxID = maxRes->getInt("MaxID");
             char buffer[15];
             sprintf_s(buffer, "ORD%06d", maxID + 1);
             return string(buffer);
@@ -25,11 +41,27 @@ private:
     }
 
     string generateOrderItemID() {
-        // Get the highest ID ever used (even if deleted)
+        // Find the smallest missing ID (reuses deleted IDs)
         auto res = db.executeQuery(
-            "SELECT COALESCE(MAX(CAST(SUBSTRING(Order_itemID, 4) AS UNSIGNED)), 0) as MaxID FROM Order_Item");
+            "SELECT t1.num + 1 AS gap "
+            "FROM (SELECT CAST(SUBSTRING(Order_itemID, 4) AS UNSIGNED) AS num FROM Order_Item) t1 "
+            "LEFT JOIN (SELECT CAST(SUBSTRING(Order_itemID, 4) AS UNSIGNED) AS num FROM Order_Item) t2 "
+            "ON t1.num + 1 = t2.num "
+            "WHERE t2.num IS NULL "
+            "ORDER BY gap LIMIT 1");
+        
         if (res && res->next()) {
-            int maxID = res->getInt("MaxID");
+            int gapID = res->getInt("gap");
+            char buffer[15];
+            sprintf_s(buffer, "ORI%06d", gapID);
+            return string(buffer);
+        }
+        
+        // If no gaps found, get max + 1 (or start with ORI000001 if table is empty)
+        auto maxRes = db.executeQuery(
+            "SELECT COALESCE(MAX(CAST(SUBSTRING(Order_itemID, 4) AS UNSIGNED)), 0) as MaxID FROM Order_Item");
+        if (maxRes && maxRes->next()) {
+            int maxID = maxRes->getInt("MaxID");
             char buffer[15];
             sprintf_s(buffer, "ORI%06d", maxID + 1);
             return string(buffer);
