@@ -28,9 +28,14 @@ void clearInputBuffer() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
+void clearScreen() {
+    system("cls");  // Clear screen on Windows
+}
+
 void pressEnterToContinue() {
     cout << "\nPress Enter to continue...";
     cin.get();
+    clearScreen();  // Clear screen after user presses enter
 }
 
 void printHeader(const string& title) {
@@ -129,6 +134,7 @@ void showAdminMainMenu() {
 void adminStaffManagement() {
     int choice;
     do {
+        clearScreen();
         printHeader("STAFF MANAGEMENT");
         cout << "1. View All Staff" << endl;
         cout << "2. View Active Staff" << endl;
@@ -195,6 +201,7 @@ void adminStaffManagement() {
 void adminMenuManagement() {
     int choice;
     do {
+        clearScreen();
         printHeader("MENU MANAGEMENT");
         cout << "1. View All Menu Items" << endl;
         cout << "2. View Available Menu" << endl;
@@ -293,6 +300,7 @@ void adminMenuManagement() {
 void adminTableManagement() {
     int choice;
     do {
+        clearScreen();
         printHeader("TABLE MANAGEMENT");
         cout << "1. View All Tables" << endl;
         cout << "2. View Vacant Tables" << endl;
@@ -381,6 +389,7 @@ void adminTableManagement() {
 void adminDashboard() {
     int choice;
     do {
+        clearScreen();
         showAdminMainMenu();
         cin >> choice;
         clearInputBuffer();
@@ -635,6 +644,7 @@ void staffProcessPayment() {
 void staffDashboard() {
     int choice;
     do {
+        clearScreen();
         showStaffMainMenu();
         cin >> choice;
         clearInputBuffer();
@@ -738,6 +748,7 @@ int main() {
     // Main loop
     int choice;
     do {
+        clearScreen();
         choice = showLoginMenu();
 
         switch (choice) {
