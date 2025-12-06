@@ -169,8 +169,22 @@ public:
     // Add menu item
     bool addMenuItem(const string& name, double price, const string& category) {
         try {
-            // Validate category
-            if (category != "Food" && category != "Beverage" && category != "Dessert") {
+            // Convert input to lowercase for case-insensitive comparison
+            string categoryLower = category;
+            transform(categoryLower.begin(), categoryLower.end(), categoryLower.begin(), ::tolower);
+            
+            // Normalize to proper case format
+            string normalizedCategory;
+            if (categoryLower == "food") {
+                normalizedCategory = "Food";
+            }
+            else if (categoryLower == "beverage") {
+                normalizedCategory = "Beverage";
+            }
+            else if (categoryLower == "dessert") {
+                normalizedCategory = "Dessert";
+            }
+            else {
                 cout << "[FAILED] Invalid category! Use 'Food', 'Beverage', or 'Dessert'." << endl;
                 return false;
             }
@@ -189,7 +203,7 @@ public:
                 pstmt->setString(1, menuID);
                 pstmt->setString(2, name);
                 pstmt->setDouble(3, price);
-                pstmt->setString(4, category);
+                pstmt->setString(4, normalizedCategory);
                 pstmt->executeUpdate();
                 cout << "[SUCCESS] Menu item added with ID: " << menuID << endl;
                 return true;
