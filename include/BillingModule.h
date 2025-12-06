@@ -329,14 +329,17 @@ public:
     // View unpaid orders (order-focused view)
     void viewUnpaidTables() {
         auto res = db.executeQuery(
-            "SELECT b.BillID, b.OrderID, o.Order_date, o.Order_status, "
-            "t.Table_number, s.Name as Staff_Name, b.Total, b.Payment_method, b.Bill_date "
-            "FROM Bill b "
-            "JOIN Orders o ON b.OrderID = o.OrderID "
+            "SELECT o.OrderID, b.BillID, o.Order_date, o.Order_status, "
+            "t.Table_number, s.Name as Staff_Name, "
+            "COALESCE(b.Total, o.Total_amount) as Total, "
+            "b.Payment_method, b.Bill_date, b.Payment_status "
+            "FROM Orders o "
             "JOIN Tables t ON o.TableID = t.TableID "
             "JOIN Staff s ON o.StaffID = s.StaffID "
-            "WHERE b.Payment_status = 'Unpaid' "
-            "ORDER BY b.Bill_date");
+            "LEFT JOIN Bill b ON o.OrderID = b.OrderID "
+            "WHERE (b.Payment_status = 'Unpaid' OR b.Payment_status IS NULL) "
+            "AND o.Order_status = 'Active' "
+            "ORDER BY o.Order_date");
 
         if (res) {
             cout << "\n" << string(95, '=') << endl;
@@ -357,14 +360,23 @@ public:
             while (res->next()) {
                 double amount = res->getDouble("Total");
                 totalUnpaid += amount;
+                string billID = res->getString("BillID");
+                string paymentMethod = res->getString("Payment_method");
+                string billDate = res->getString("Bill_date");
+                
+                // Handle NULL values for orders without bills
+                if (billID.empty()) billID = "Not Generated";
+                if (paymentMethod.empty()) paymentMethod = "N/A";
+                if (billDate.empty()) billDate = "N/A";
+                
                 cout << left << setw(12) << res->getString("OrderID")
-                    << setw(12) << res->getString("BillID")
+                    << setw(12) << billID
                     << setw(10) << res->getString("Table_number")
                     << setw(18) << res->getString("Staff_Name")
                     << "RM " << setw(12) << fixed << setprecision(2) << amount
-                    << setw(12) << res->getString("Payment_method")
+                    << setw(12) << paymentMethod
                     << setw(12) << res->getString("Order_date")
-                    << res->getString("Bill_date") << endl;
+                    << billDate << endl;
                 count++;
             }
             if (count == 0) {
