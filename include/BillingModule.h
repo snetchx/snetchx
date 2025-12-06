@@ -326,57 +326,58 @@ public:
         }
     }
 
-    // View unpaid tables (table-focused view)
+    // View unpaid orders (order-focused view)
     void viewUnpaidTables() {
         auto res = db.executeQuery(
-            "SELECT t.TableID, t.Table_number, t.Capacity, t.Status, "
-            "b.BillID, b.OrderID, b.Total, b.Payment_method, b.Bill_date "
-            "FROM Tables t "
-            "JOIN Orders o ON t.TableID = o.TableID "
-            "JOIN Bill b ON o.OrderID = b.OrderID "
+            "SELECT b.BillID, b.OrderID, o.Order_date, o.Order_status, "
+            "t.Table_number, s.Staff_Name, b.Total, b.Payment_method, b.Bill_date "
+            "FROM Bill b "
+            "JOIN Orders o ON b.OrderID = o.OrderID "
+            "JOIN Tables t ON o.TableID = t.TableID "
+            "JOIN Staff s ON o.StaffID = s.StaffID "
             "WHERE b.Payment_status = 'Unpaid' "
-            "ORDER BY t.Table_number");
+            "ORDER BY b.Bill_date");
 
         if (res) {
-            cout << "\n" << string(85, '=') << endl;
-            cout << "TABLES WITH UNPAID BILLS" << endl;
-            cout << string(85, '=') << endl;
-            cout << left << setw(10) << "Table #"
-                << setw(8) << "Capacity"
-                << setw(12) << "Status"
+            cout << "\n" << string(95, '=') << endl;
+            cout << "UNPAID ORDERS" << endl;
+            cout << string(95, '=') << endl;
+            cout << left << setw(12) << "Order ID"
                 << setw(12) << "Bill ID"
-                << setw(12) << "Order ID"
+                << setw(10) << "Table #"
+                << setw(18) << "Staff"
                 << setw(15) << "Amount (RM)"
                 << setw(12) << "Method"
+                << setw(12) << "Order Date"
                 << "Bill Date" << endl;
-            cout << string(85, '-') << endl;
+            cout << string(95, '-') << endl;
 
             int count = 0;
             double totalUnpaid = 0;
             while (res->next()) {
                 double amount = res->getDouble("Total");
                 totalUnpaid += amount;
-                cout << left << setw(10) << res->getString("Table_number")
-                    << setw(8) << res->getInt("Capacity")
-                    << setw(12) << res->getString("Status")
+                cout << left << setw(12) << res->getString("OrderID")
                     << setw(12) << res->getString("BillID")
-                    << setw(12) << res->getString("OrderID")
+                    << setw(10) << res->getString("Table_number")
+                    << setw(18) << res->getString("Staff_Name")
                     << "RM " << setw(12) << fixed << setprecision(2) << amount
                     << setw(12) << res->getString("Payment_method")
+                    << setw(12) << res->getString("Order_date")
                     << res->getString("Bill_date") << endl;
                 count++;
             }
             if (count == 0) {
-                cout << "All tables are paid! No unpaid bills." << endl;
+                cout << "All orders are paid! No unpaid bills." << endl;
             }
             else {
-                cout << string(85, '-') << endl;
+                cout << string(95, '-') << endl;
                 cout << left << setw(42) << "Total Unpaid Amount:"
                     << "RM " << fixed << setprecision(2) << totalUnpaid << endl;
-                cout << left << setw(42) << "Number of Unpaid Tables:"
+                cout << left << setw(42) << "Number of Unpaid Orders:"
                     << count << endl;
             }
-            cout << string(85, '=') << endl;
+            cout << string(95, '=') << endl;
         }
     }
 
