@@ -329,10 +329,9 @@ public:
     // View unpaid orders (order-focused view)
     void viewUnpaidTables() {
         auto res = db.executeQuery(
-            "SELECT o.OrderID, b.BillID, o.Order_date, o.Order_status, "
+            "SELECT o.OrderID, o.Order_date, o.Order_status, "
             "t.Table_number, s.Name as Staff_Name, "
-            "COALESCE(b.Total, o.Total_amount) as Total, "
-            "b.Payment_method, b.Bill_date, b.Payment_status "
+            "COALESCE(b.Total, o.Total_amount) as Total, b.Payment_status "
             "FROM Orders o "
             "JOIN Tables t ON o.TableID = t.TableID "
             "JOIN Staff s ON o.StaffID = s.StaffID "
@@ -342,54 +341,40 @@ public:
             "ORDER BY o.Order_date");
 
         if (res) {
-            cout << "\n" << string(95, '=') << endl;
+            cout << "\n" << string(70, '=') << endl;
             cout << "UNPAID ORDERS" << endl;
-            cout << string(95, '=') << endl;
+            cout << string(70, '=') << endl;
             cout << left << setw(12) << "Order ID"
-                << setw(12) << "Bill ID"
                 << setw(10) << "Table #"
                 << setw(18) << "Staff"
                 << setw(15) << "Amount (RM)"
-                << setw(12) << "Method"
-                << setw(12) << "Order Date"
-                << "Bill Date" << endl;
-            cout << string(95, '-') << endl;
+                << "Order Date" << endl;
+            cout << string(70, '-') << endl;
 
             int count = 0;
             double totalUnpaid = 0;
             while (res->next()) {
                 double amount = res->getDouble("Total");
                 totalUnpaid += amount;
-                string billID = res->getString("BillID");
-                string paymentMethod = res->getString("Payment_method");
-                string billDate = res->getString("Bill_date");
-                
-                // Handle NULL values for orders without bills
-                if (billID.empty()) billID = "Not Generated";
-                if (paymentMethod.empty()) paymentMethod = "N/A";
-                if (billDate.empty()) billDate = "N/A";
                 
                 cout << left << setw(12) << res->getString("OrderID")
-                    << setw(12) << billID
                     << setw(10) << res->getString("Table_number")
                     << setw(18) << res->getString("Staff_Name")
                     << "RM " << setw(12) << fixed << setprecision(2) << amount
-                    << setw(12) << paymentMethod
-                    << setw(12) << res->getString("Order_date")
-                    << billDate << endl;
+                    << res->getString("Order_date") << endl;
                 count++;
             }
             if (count == 0) {
                 cout << "All orders are paid! No unpaid bills." << endl;
             }
             else {
-                cout << string(95, '-') << endl;
+                cout << string(70, '-') << endl;
                 cout << left << setw(42) << "Total Unpaid Amount:"
                     << "RM " << fixed << setprecision(2) << totalUnpaid << endl;
                 cout << left << setw(42) << "Number of Unpaid Orders:"
                     << count << endl;
             }
-            cout << string(95, '=') << endl;
+            cout << string(70, '=') << endl;
         }
     }
 
