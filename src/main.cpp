@@ -454,8 +454,8 @@ void showStaffMainMenu() {
     cout << "5.  View Order Details" << endl;
     cout << "6.  View Active Orders" << endl;
     cout << "7.  Cancel Order" << endl;
-    cout << "8.  Generate Bill" << endl;
-    cout << "9.  Process Payment" << endl;
+    cout << "8.  Generate Bill & Process Payment" << endl;
+    cout << "9.  Process Payment (Unpaid Bills)" << endl;
     cout << "10. View Unpaid Bills" << endl;
     cout << "11. Logout" << endl;
     cout << string(60, '-') << endl;
@@ -567,7 +567,7 @@ void staffAddItemsToOrder() {
 
 void staffGenerateBill() {
     orderModule->viewActiveOrders();
-    cout << "\n--- GENERATE BILL ---" << endl;
+    cout << "\n--- GENERATE BILL & PROCESS PAYMENT ---" << endl;
 
     string orderID;
     cout << "Enter Order ID: ";
@@ -585,7 +585,11 @@ void staffGenerateBill() {
         return;
     }
 
-    cout << "Select payment method:" << endl;
+    // Show order details first
+    cout << "\n--- Order Summary ---" << endl;
+    orderModule->viewOrderDetails(orderID);
+
+    cout << "\nSelect payment method:" << endl;
     cout << "1. Cash" << endl;
     cout << "2. Card" << endl;
     cout << "3. E-Wallet" << endl;
@@ -605,18 +609,17 @@ void staffGenerateBill() {
         return;
     }
 
+    // Generate bill
     string billID = billingModule->generateBill(orderID, staffModule->getStaffID(), paymentMethod);
 
     if (!billID.empty()) {
-        billingModule->viewBillDetails(billID);
-
-        cout << "\nProcess payment now? (Y/N): ";
-        char processNow;
-        cin >> processNow;
-        clearInputBuffer();
-
-        if (toupper(processNow) == 'Y') {
-            billingModule->processPayment(billID);
+        // Automatically process payment
+        cout << "\nProcessing payment..." << endl;
+        if (billingModule->processPayment(billID)) {
+            cout << "\n--- Payment Receipt ---" << endl;
+            billingModule->viewBillDetails(billID);
+            cout << "\n[SUCCESS] Bill generated and payment processed successfully!" << endl;
+            cout << "[INFO] Table has been set to Vacant." << endl;
         }
     }
 }

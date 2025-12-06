@@ -18,8 +18,8 @@ A comprehensive Restaurant Management System built with **C++** and **MySQL** da
 - ✅ View available menu items
 - ✅ Create and manage orders
 - ✅ Add items to orders
-- ✅ Generate bills
-- ✅ Process payments (Cash, Card, E-Wallet)
+- ✅ Generate bills & process payments (combined workflow)
+- ✅ Process payments for unpaid bills separately
 - ✅ View unpaid bills
 
 ### Core Features
