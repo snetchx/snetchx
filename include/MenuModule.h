@@ -3,6 +3,8 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
+#include <cctype>
 
 using namespace std;
 
@@ -233,18 +235,30 @@ public:
     // Update menu availability
     bool updateMenuAvailability(const string& menuID, const string& availability) {
         try {
-            if (availability != "Available" && availability != "Unavailable") {
+            // Convert input to lowercase for case-insensitive comparison
+            string availabilityLower = availability;
+            transform(availabilityLower.begin(), availabilityLower.end(), availabilityLower.begin(), ::tolower);
+            
+            // Normalize to proper case format
+            string normalizedAvailability;
+            if (availabilityLower == "available") {
+                normalizedAvailability = "Available";
+            }
+            else if (availabilityLower == "unavailable") {
+                normalizedAvailability = "Unavailable";
+            }
+            else {
                 cout << "[FAILED] Invalid status! Use 'Available' or 'Unavailable'." << endl;
                 return false;
             }
 
             auto pstmt = db.prepareStatement("UPDATE Menu SET Availability = ? WHERE MenuID = ?");
             if (pstmt) {
-                pstmt->setString(1, availability);
+                pstmt->setString(1, normalizedAvailability);
                 pstmt->setString(2, menuID);
                 int result = pstmt->executeUpdate();
                 if (result > 0) {
-                    cout << "[SUCCESS] Availability updated to " << availability << endl;
+                    cout << "[SUCCESS] Availability updated to " << normalizedAvailability << endl;
                     return true;
                 }
                 else {
