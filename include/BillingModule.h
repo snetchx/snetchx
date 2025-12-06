@@ -330,7 +330,7 @@ public:
     void viewUnpaidTables() {
         auto res = db.executeQuery(
             "SELECT b.BillID, b.OrderID, o.Order_date, o.Order_status, "
-            "t.Table_number, s.Staff_Name, b.Total, b.Payment_method, b.Bill_date "
+            "t.Table_number, s.Name as Staff_Name, b.Total, b.Payment_method, b.Bill_date "
             "FROM Bill b "
             "JOIN Orders o ON b.OrderID = o.OrderID "
             "JOIN Tables t ON o.TableID = t.TableID "
