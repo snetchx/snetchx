@@ -455,7 +455,7 @@ void showStaffMainMenu() {
     cout << "6.  View Active Orders" << endl;
     cout << "7.  Cancel Order" << endl;
     cout << "8.  Process Payment (Auto-generates bill if needed)" << endl;
-    cout << "9.  View Unpaid Bills" << endl;
+    cout << "9.  View Unpaid Tables" << endl;
     cout << "10. Logout" << endl;
     cout << string(60, '-') << endl;
     cout << "Enter your choice: ";
@@ -590,7 +590,7 @@ void staffAddItemsToOrder() {
 }
 
 void staffProcessPayment() {
-    orderModule->viewActiveOrders();
+    billingModule->viewUnpaidTables();
     cout << "\n--- PROCESS PAYMENT ---" << endl;
 
     string orderID;
@@ -719,7 +719,7 @@ void staffDashboard() {
             pressEnterToContinue();
             break;
         case 9:
-            billingModule->viewUnpaidBills();
+            billingModule->viewUnpaidTables();
             pressEnterToContinue();
             break;
         case 10:
