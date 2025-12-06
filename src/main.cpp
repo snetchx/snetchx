@@ -454,10 +454,9 @@ void showStaffMainMenu() {
     cout << "5.  View Order Details" << endl;
     cout << "6.  View Active Orders" << endl;
     cout << "7.  Cancel Order" << endl;
-    cout << "8.  Generate Bill & Process Payment" << endl;
-    cout << "9.  Process Payment (Unpaid Bills)" << endl;
-    cout << "10. View Unpaid Bills" << endl;
-    cout << "11. Logout" << endl;
+    cout << "8.  Process Payment (Auto-generates bill if needed)" << endl;
+    cout << "9.  View Unpaid Bills" << endl;
+    cout << "10. Logout" << endl;
     cout << string(60, '-') << endl;
     cout << "Enter your choice: ";
 }
@@ -565,9 +564,9 @@ void staffAddItemsToOrder() {
     orderModule->viewOrderDetails(orderID);
 }
 
-void staffGenerateBill() {
+void staffProcessPayment() {
     orderModule->viewActiveOrders();
-    cout << "\n--- GENERATE BILL & PROCESS PAYMENT ---" << endl;
+    cout << "\n--- PROCESS PAYMENT ---" << endl;
 
     string orderID;
     cout << "Enter Order ID: ";
@@ -589,58 +588,52 @@ void staffGenerateBill() {
     cout << "\n--- Order Summary ---" << endl;
     orderModule->viewOrderDetails(orderID);
 
-    cout << "\nSelect payment method:" << endl;
-    cout << "1. Cash" << endl;
-    cout << "2. Card" << endl;
-    cout << "3. E-Wallet" << endl;
-    cout << "Enter choice: ";
+    // Check if bill already exists
+    string billID = billingModule->getBillForOrder(orderID);
+    
+    if (billID.empty()) {
+        // Bill doesn't exist, generate it first
+        cout << "\nBill not found. Generating bill..." << endl;
+        
+        cout << "Select payment method:" << endl;
+        cout << "1. Cash" << endl;
+        cout << "2. Card" << endl;
+        cout << "3. E-Wallet" << endl;
+        cout << "Enter choice: ";
 
-    int methodChoice;
-    cin >> methodChoice;
-    clearInputBuffer();
+        int methodChoice;
+        cin >> methodChoice;
+        clearInputBuffer();
 
-    string paymentMethod;
-    switch (methodChoice) {
-    case 1: paymentMethod = "Cash"; break;
-    case 2: paymentMethod = "Card"; break;
-    case 3: paymentMethod = "E-Wallet"; break;
-    default:
-        cout << "[FAILED] Invalid payment method!" << endl;
-        return;
-    }
-
-    // Generate bill
-    string billID = billingModule->generateBill(orderID, staffModule->getStaffID(), paymentMethod);
-
-    if (!billID.empty()) {
-        // Automatically process payment
-        cout << "\nProcessing payment..." << endl;
-        if (billingModule->processPayment(billID)) {
-            cout << "\n--- Payment Receipt ---" << endl;
-            billingModule->viewBillDetails(billID);
-            cout << "\n[SUCCESS] Bill generated and payment processed successfully!" << endl;
-            cout << "[INFO] Table has been set to Vacant." << endl;
+        string paymentMethod;
+        switch (methodChoice) {
+        case 1: paymentMethod = "Cash"; break;
+        case 2: paymentMethod = "Card"; break;
+        case 3: paymentMethod = "E-Wallet"; break;
+        default:
+            cout << "[FAILED] Invalid payment method!" << endl;
+            return;
         }
+
+        billID = billingModule->generateBill(orderID, staffModule->getStaffID(), paymentMethod);
+        
+        if (billID.empty()) {
+            cout << "[FAILED] Failed to generate bill!" << endl;
+            return;
+        }
+    } else {
+        // Bill exists, show it
+        cout << "\n--- Existing Bill ---" << endl;
+        billingModule->viewBillDetails(billID);
     }
-}
 
-void staffProcessPayment() {
-    billingModule->viewUnpaidBills();
-    cout << "\n--- PROCESS PAYMENT ---" << endl;
-
-    string billID;
-    cout << "Enter Bill ID: ";
-    getline(cin, billID);
-
-    billingModule->viewBillDetails(billID);
-
-    cout << "\nConfirm payment? (Y/N): ";
-    char confirm;
-    cin >> confirm;
-    clearInputBuffer();
-
-    if (toupper(confirm) == 'Y') {
-        billingModule->processPayment(billID);
+    // Process payment
+    cout << "\nProcessing payment..." << endl;
+    if (billingModule->processPayment(billID)) {
+        cout << "\n--- Payment Receipt ---" << endl;
+        billingModule->viewBillDetails(billID);
+        cout << "\n[SUCCESS] Payment processed successfully!" << endl;
+        cout << "[INFO] Table has been set to Vacant." << endl;
     }
 }
 
@@ -697,24 +690,20 @@ void staffDashboard() {
             break;
         }
         case 8:
-            staffGenerateBill();
-            pressEnterToContinue();
-            break;
-        case 9:
             staffProcessPayment();
             pressEnterToContinue();
             break;
-        case 10:
+        case 9:
             billingModule->viewUnpaidBills();
             pressEnterToContinue();
             break;
-        case 11:
+        case 10:
             staffModule->logout();
             break;
         default:
             cout << "Invalid choice!" << endl;
         }
-    } while (choice != 11);
+    } while (choice != 10);
 }
 
 // ============================================
