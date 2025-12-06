@@ -3,6 +3,8 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
+#include <cctype>
 
 using namespace std;
 
@@ -141,14 +143,28 @@ public:
     // Update table status
     bool updateTableStatus(const string& tableID, const string& status) {
         try {
-            // Validate status
-            if (status != "Vacant" && status != "Occupied" && status != "Reserved") {
+            // Convert input to lowercase for case-insensitive comparison
+            string statusLower = status;
+            transform(statusLower.begin(), statusLower.end(), statusLower.begin(), ::tolower);
+            
+            // Normalize to proper case format
+            string normalizedStatus;
+            if (statusLower == "vacant") {
+                normalizedStatus = "Vacant";
+            }
+            else if (statusLower == "occupied") {
+                normalizedStatus = "Occupied";
+            }
+            else if (statusLower == "reserved") {
+                normalizedStatus = "Reserved";
+            }
+            else {
                 cout << "[FAILED] Invalid status! Use 'Vacant', 'Occupied', or 'Reserved'." << endl;
                 return false;
             }
 
             // Business rule: Vacant tables cannot have active orders (check when setting to Vacant)
-            if (status == "Vacant") {
+            if (normalizedStatus == "Vacant") {
                 auto checkStmt = db.prepareStatement(
                     "SELECT OrderID FROM Orders WHERE TableID = ? AND Order_status = 'Active'");
                 if (checkStmt) {
@@ -163,11 +179,11 @@ public:
 
             auto pstmt = db.prepareStatement("UPDATE Tables SET Status = ? WHERE TableID = ?");
             if (pstmt) {
-                pstmt->setString(1, status);
+                pstmt->setString(1, normalizedStatus);
                 pstmt->setString(2, tableID);
                 int result = pstmt->executeUpdate();
                 if (result > 0) {
-                    cout << "[SUCCESS] Table status updated to " << status << endl;
+                    cout << "[SUCCESS] Table status updated to " << normalizedStatus << endl;
                     return true;
                 }
                 else {
