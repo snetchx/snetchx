@@ -243,6 +243,8 @@ void adminMenuManagement() {
             break;
         }
         case 5: {
+            menuModule->viewAllMenu();
+            cout << "\n--- ADD MENU ITEM ---" << endl;
             string name, category;
             double price;
             cout << "Enter item name: ";
