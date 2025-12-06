@@ -688,6 +688,8 @@ void staffDashboard() {
             pressEnterToContinue();
             break;
         case 5: {
+            orderModule->viewActiveOrders();
+            cout << "\n--- VIEW ORDER DETAILS ---" << endl;
             string orderID;
             cout << "Enter Order ID: ";
             getline(cin, orderID);
