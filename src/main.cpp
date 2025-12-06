@@ -494,36 +494,46 @@ void staffCreateOrder() {
     string orderID = orderModule->createOrder(tableID, staffModule->getStaffID());
 
     if (!orderID.empty()) {
-        // Ask if user wants to add items immediately
-        cout << "\nWould you like to add items now? (Y/N): ";
-        char addItems;
-        cin >> addItems;
-        clearInputBuffer();
+        cout << "\n[SUCCESS] Order created: " << orderID << endl;
+        cout << "\n--- ADD ITEMS TO ORDER ---" << endl;
+        cout << "Enter '0' or 'STOP' to finish adding items\n" << endl;
+        
+        menuModule->viewAvailableMenu();
 
-        if (toupper(addItems) == 'Y') {
-            menuModule->viewAvailableMenu();
+        while (true) {
+            string menuID;
+            int quantity;
 
-            char continueAdding = 'Y';
-            while (toupper(continueAdding) == 'Y') {
-                string menuID;
-                int quantity;
-
-                cout << "\nEnter Menu ID: ";
-                getline(cin, menuID);
-                cout << "Enter quantity: ";
-                cin >> quantity;
-                clearInputBuffer();
-
-                orderModule->addOrderItem(orderID, menuID, quantity);
-
-                cout << "Add another item? (Y/N): ";
-                cin >> continueAdding;
-                clearInputBuffer();
+            cout << "\nEnter Menu ID (or '0'/'STOP' to finish): ";
+            getline(cin, menuID);
+            
+            // Check for stop commands
+            if (menuID == "0" || menuID == "STOP" || menuID == "stop" || menuID == "Stop") {
+                break;
+            }
+            
+            // Validate menu ID is not empty
+            if (menuID.empty()) {
+                cout << "[WARNING] Please enter a valid Menu ID or '0' to stop." << endl;
+                continue;
             }
 
-            // Show order summary
-            orderModule->viewOrderDetails(orderID);
+            cout << "Enter quantity: ";
+            cin >> quantity;
+            clearInputBuffer();
+            
+            // Validate quantity
+            if (quantity <= 0) {
+                cout << "[WARNING] Quantity must be greater than 0!" << endl;
+                continue;
+            }
+
+            orderModule->addOrderItem(orderID, menuID, quantity);
         }
+
+        // Show order summary
+        cout << "\n--- ORDER SUMMARY ---" << endl;
+        orderModule->viewOrderDetails(orderID);
     }
 }
 
@@ -540,27 +550,42 @@ void staffAddItemsToOrder() {
         return;
     }
 
+    cout << "\nEnter '0' or 'STOP' to finish adding items\n" << endl;
     menuModule->viewAvailableMenu();
 
-    char continueAdding = 'Y';
-    while (toupper(continueAdding) == 'Y') {
+    while (true) {
         string menuID;
         int quantity;
 
-        cout << "\nEnter Menu ID: ";
+        cout << "\nEnter Menu ID (or '0'/'STOP' to finish): ";
         getline(cin, menuID);
+        
+        // Check for stop commands
+        if (menuID == "0" || menuID == "STOP" || menuID == "stop" || menuID == "Stop") {
+            break;
+        }
+        
+        // Validate menu ID is not empty
+        if (menuID.empty()) {
+            cout << "[WARNING] Please enter a valid Menu ID or '0' to stop." << endl;
+            continue;
+        }
+
         cout << "Enter quantity: ";
         cin >> quantity;
         clearInputBuffer();
+        
+        // Validate quantity
+        if (quantity <= 0) {
+            cout << "[WARNING] Quantity must be greater than 0!" << endl;
+            continue;
+        }
 
         orderModule->addOrderItem(orderID, menuID, quantity);
-
-        cout << "Add another item? (Y/N): ";
-        cin >> continueAdding;
-        clearInputBuffer();
     }
 
     // Show updated order
+    cout << "\n--- UPDATED ORDER SUMMARY ---" << endl;
     orderModule->viewOrderDetails(orderID);
 }
 
