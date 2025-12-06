@@ -195,6 +195,19 @@ public:
                 return false;
             }
 
+            // Check if menu item with same name already exists (case-insensitive)
+            auto checkStmt = db.prepareStatement(
+                "SELECT MenuID, Menu_name FROM Menu WHERE LOWER(Menu_name) = LOWER(?)");
+            if (checkStmt) {
+                checkStmt->setString(1, name);
+                auto checkRes = checkStmt->executeQuery();
+                if (checkRes->next()) {
+                    cout << "[FAILED] Menu item with name '" << checkRes->getString("Menu_name") 
+                         << "' already exists! (ID: " << checkRes->getString("MenuID") << ")" << endl;
+                    return false;
+                }
+            }
+
             string menuID = generateMenuID();
             auto pstmt = db.prepareStatement(
                 "INSERT INTO Menu (MenuID, Menu_name, Price, Category, Availability) "
