@@ -336,6 +336,8 @@ void adminTableManagement() {
             pressEnterToContinue();
             break;
         case 5: {
+            tableModule->viewAllTables();
+            cout << "\n--- ADD NEW TABLE ---" << endl;
             string tableNumber;
             int capacity;
             cout << "Enter table number (e.g., T11): ";

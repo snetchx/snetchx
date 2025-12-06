@@ -110,12 +110,13 @@ public:
             }
 
             // Check if table number already exists
-            auto checkStmt = db.prepareStatement("SELECT TableID FROM Tables WHERE Table_number = ?");
+            auto checkStmt = db.prepareStatement("SELECT TableID, Table_number FROM Tables WHERE Table_number = ?");
             if (checkStmt) {
                 checkStmt->setString(1, tableNumber);
                 auto checkRes = checkStmt->executeQuery();
                 if (checkRes->next()) {
-                    cout << "[FAILED] Table number already exists!" << endl;
+                    cout << "[FAILED] Table number '" << checkRes->getString("Table_number") 
+                         << "' already exists! (ID: " << checkRes->getString("TableID") << ")" << endl;
                     return false;
                 }
             }
